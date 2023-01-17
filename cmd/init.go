@@ -37,6 +37,8 @@ func initCmd(out io.Writer) *cobra.Command {
 			if err != nil {
 				return err
 			}
+			//TODO: save current context
+			// add it to existing context list
 			_, _ = fmt.Fprintf(out, "context created in: %s\n", contextDIR)
 			return nil
 		},
