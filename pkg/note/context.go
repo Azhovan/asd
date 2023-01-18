@@ -50,6 +50,7 @@ func GetContextFile(path string) (ContextFile, error) {
 	if err != nil {
 		return ContextFile{}, err
 	}
+
 	ctx := NewEmptyContexts()
 	err = yaml.NewDecoder(ctxFile).Decode(&ctx)
 

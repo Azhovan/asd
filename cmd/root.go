@@ -14,6 +14,7 @@ func newCommand() *cobra.Command {
 		SilenceUsage: true,
 	}
 	cmd.AddCommand(initCmd(os.Stdout))
+	cmd.AddCommand(contextCmd(os.Stdout))
 
 	return cmd
 }
