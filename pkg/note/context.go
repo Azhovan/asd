@@ -1,7 +1,6 @@
 package note
 
 import (
-	"errors"
 	"io"
 	"os"
 
@@ -16,11 +15,6 @@ type ContextFile struct {
 	// Current active context.
 	CurrentContext string `yaml:"current-context"`
 }
-
-var (
-	errContextNameIsMissing = errors.New("field name is missing")
-	errContextIsMissing     = errors.New("context DIR is missing")
-)
 
 // SetNewContext sets the current context to the new context and also add
 // the new context path to the list of the existing context's paths.
@@ -42,7 +36,8 @@ func SetNewContext(name, path string) error {
 	return setContext(ctxFile, name, path)
 }
 
-// GetContextFile GteContextFile returns context file as a struct.
+// GetContextFile GteContextFile returns context file as a struct within the
+// given directory. Usually this directory is asd home directory.
 func GetContextFile(path string) (ContextFile, error) {
 	path = filepath.Join(path, "contexts.yaml")
 

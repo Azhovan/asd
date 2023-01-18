@@ -1,7 +1,5 @@
 package note
 
-import "time"
-
 type Note struct {
 	// Title of the note
 	Title string
@@ -40,5 +38,5 @@ type ActionItem struct {
 type Dialog struct {
 	Person    string
 	Message   string
-	Timestamp time.Time
+	Timestamp string
 }
