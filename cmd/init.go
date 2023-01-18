@@ -3,10 +3,11 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"os"
 	"time"
 
 	"github.com/spf13/cobra"
+
+	"github.com/azhovan/asd/pkg/note"
 )
 
 type options struct {
@@ -28,18 +29,11 @@ func initCmd(out io.Writer) *cobra.Command {
 				opts.Name = fmt.Sprintf("init-%d", time.Now().Unix())
 			}
 
-			userhome, err := os.UserHomeDir()
+			path, err := note.NewNote(opts.Name)
 			if err != nil {
 				return err
 			}
-			contextDIR := fmt.Sprintf("%s/.asd/%s", userhome, opts.Name)
-			err = os.MkdirAll(contextDIR, os.ModePerm)
-			if err != nil {
-				return err
-			}
-			//TODO: save current context
-			// add it to existing context list
-			_, _ = fmt.Fprintf(out, "context created in: %s\n", contextDIR)
+			_, _ = fmt.Fprintf(out, "context created in: %s\n", path)
 			return nil
 		},
 	}
