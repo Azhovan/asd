@@ -3,10 +3,11 @@ package note
 import "errors"
 
 var (
-	errContextNameIsMissing = errors.New("field name is missing")
-	errContextIsMissing     = errors.New("context DIR is missing")
+	ErrContextIsMissing = errors.New("context DIR is missing")
 
-	// ErrNoteIsNotExist is returned when we want to access current note
-	// and there is no note.
-	ErrNoteIsNotExist = errors.New("there is no note")
+	// ErrNoteIsMissing is returned when contexts-file exist but for some reasons there is no Note
+	// file. this is very rare scenario though.
+	ErrNoteIsMissing = errors.New("note file is missing")
+
+	ErrNoteIDIsMissing = errors.New("note identifier is missing")
 )

@@ -1,7 +1,6 @@
 package note
 
 import (
-	"io"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -9,37 +8,19 @@ import (
 )
 
 type ContextFile struct {
-	// A list of all existing contexts.
+	// A key/value of all existing contexts.
+	// key represent Note identifier, and value is
+	// the path to where Note information is saved.
 	Contexts map[string]string `yaml:"contexts"`
 
 	// Current active context.
 	CurrentContext string `yaml:"current-context"`
 }
 
-// SetNewContext sets the current context to the new context and also add
-// the new context path to the list of the existing context's paths.
-func SetNewContext(name, path string) error {
-	ctxFile, err := ensureContextFile(path)
-	if err != nil {
-		return err
-	}
-
-	err = ensureNewContextDir(path)
-	if err != nil {
-		return err
-	}
-
-	if name == "" {
-		return errContextNameIsMissing
-	}
-
-	return setContext(ctxFile, name, path)
-}
-
 // GetContextFile GteContextFile returns context file as a struct within the
 // given directory. Usually this directory is asd home directory.
 func GetContextFile(path string) (ContextFile, error) {
-	path = filepath.Join(path, "contexts.yaml")
+	path = filepath.Join(path, DefaultContextsFilename)
 
 	ctxFile, err := os.Open(path)
 	if err != nil {
@@ -52,35 +33,10 @@ func GetContextFile(path string) (ContextFile, error) {
 	return ctx, err
 }
 
-func setContext(ctxFile *os.File, name, path string) error {
-	contexts := NewEmptyContexts()
-
-	err := yaml.NewDecoder(ctxFile).Decode(&contexts)
-	if err != nil && err != io.EOF {
-		return err
-	}
-	contexts.CurrentContext = name
-	contexts.Contexts[name] = path
-
-	ctxFile, err = os.Create(ctxFile.Name())
-	if err != nil {
-		return err
-	}
-	return yaml.NewEncoder(ctxFile).Encode(&contexts)
-}
-
-func ensureNewContextDir(path string) error {
-	_, err := os.Stat(path)
-	if err != nil && os.IsNotExist(err) {
-		return errContextIsMissing
-	}
-
-	return nil
-}
-
-func ensureContextFile(path string) (*os.File, error) {
+// ensureContextFile creates a contexts file if it doesn't exist already.
+func ensureContextFile(noteDIR string) (*os.File, error) {
 	// i.e /tmp/asd/contexts.yaml
-	ctxPath := filepath.Join(path, "..", "contexts.yaml")
+	ctxPath := filepath.Join(noteDIR, "..", "contexts.yaml")
 	return os.OpenFile(ctxPath, os.O_RDWR|os.O_CREATE, os.ModePerm)
 }
 

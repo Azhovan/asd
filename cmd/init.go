@@ -11,7 +11,7 @@ import (
 )
 
 type options struct {
-	Name string
+	NoteID string // A Note identifier.
 }
 
 // initCmd creates a new context and sets the current context to it.
@@ -25,20 +25,20 @@ func initCmd(out io.Writer) *cobra.Command {
 		Use:   "init",
 		Short: "create a new context",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if opts.Name == "" {
-				opts.Name = fmt.Sprintf("init-%d", time.Now().Unix())
+			if opts.NoteID == "" {
+				opts.NoteID = fmt.Sprintf("init-%d", time.Now().Unix())
 			}
 
-			path, err := note.NewNote(opts.Name)
-			if err != nil {
+			if err := note.NewNote(opts.NoteID); err != nil {
 				return err
 			}
-			_, _ = fmt.Fprintf(out, "context created in: %s\n", path)
+			fmt.Fprint(out, "An empty note has been created.")
+
 			return nil
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.Name, "name", "n", "", "context name")
+	cmd.Flags().StringVarP(&opts.NoteID, "id", "i", "", "note identifier")
 
 	return cmd
 }

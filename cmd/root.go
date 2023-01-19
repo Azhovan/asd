@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -14,7 +13,8 @@ func newCommand() *cobra.Command {
 		SilenceUsage: true,
 	}
 	cmd.AddCommand(initCmd(os.Stdout))
-	cmd.AddCommand(noteCmd(os.Stdout))
+	cmd.AddCommand(getCmd(os.Stdout))
+	cmd.AddCommand(addCmd(os.Stdout))
 
 	return cmd
 }
@@ -22,6 +22,6 @@ func newCommand() *cobra.Command {
 func Execute() {
 	rootCmd := newCommand()
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
+		os.Exit(0)
 	}
 }
